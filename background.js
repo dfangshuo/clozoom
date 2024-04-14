@@ -3,6 +3,7 @@
 
 // Map<TabID, true>
 const CLOSED_ZOOM_TABS = {};
+const SECONDS_TO_CLOSE = 10;
 
 function isClosableZoomInviteURL(url) {
     // https://us02web.zoom.us/j/6830992169#success
@@ -59,7 +60,7 @@ function injectedFunction(secondsToClose, tabId) {
             a.onclick = () => {
                 autoClose = false;
                 clearInterval(interval);
-                renderText('Clozoom won\\\'t auto-close this tab. ');
+                renderText('Clozoom won\'t auto-close this tab. ');
             }
             div.appendChild(a);
         }
@@ -91,7 +92,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         if (CLOSED_ZOOM_TABS[tabId]) return;
         CLOSED_ZOOM_TABS[tabId] = true;
 
-        chrome.storage.local.get({'secondsToClose': 10}, result => {
+        chrome.storage.local.get({'secondsToClose': SECONDS_TO_CLOSE}, result => {
             const millisecondsToClose = 1000 * result.secondsToClose;
 
             chrome.scripting.executeScript({
